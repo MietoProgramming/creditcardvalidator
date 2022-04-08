@@ -6,8 +6,6 @@ namespace creditcardvalidator
     {
         static void Main(string[] args)
         {
-            Console.BackgroundColor = ConsoleColor.Gray;
-            Console.ForegroundColor = ConsoleColor.Black;
             bool work = true;
             while (work)
             {
@@ -17,7 +15,7 @@ namespace creditcardvalidator
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Console.WriteLine("Something went wrong. Please try again.");
                     continue;
                 }
 
@@ -46,12 +44,6 @@ namespace creditcardvalidator
             }
 
             return controlSum % 10 == 0;
-        }
-
-        static void colorsRestart()
-        {
-            Console.BackgroundColor = ConsoleColor.Gray;
-            Console.ForegroundColor = ConsoleColor.Black;
         }
 
         static void changeColors(bool isPositive)
@@ -116,7 +108,9 @@ namespace creditcardvalidator
                     if (cardNumber == null) break;
                     bool luhnIsValid = luhnAlgorithmValidator(cardNumber);
                     string iinProvider = issuerIdentificationNumberValidator(cardNumber);
+                    changeColors(luhnIsValid && iinProvider != "Invalid Card Number");
                     Console.WriteLine(luhnIsValid && iinProvider != "Invalid Card Number" ? "Valid number - {0}" : "Invalid number - {0}", iinProvider);
+                    Console.ResetColor();
                     break;
                 case 1:
                     Console.WriteLine("Your Valid Card Number: {0}",generateCreditCardNumber());
@@ -127,7 +121,9 @@ namespace creditcardvalidator
                     List<(string, bool)> cardNumbers = generateCreditCardNumber(nbCreditCards);
                     cardNumbers.ForEach(cardNumber =>
                     {
+                        changeColors(cardNumber.Item2);
                         Console.WriteLine("{0} - {1}", cardNumber.Item1, cardNumber.Item2 ? "Valid" : "Invalid");
+                        Console.ResetColor();
                     });
                     break;
                 case 3:
@@ -158,11 +154,17 @@ namespace creditcardvalidator
                 bool luhnIsValid = luhnAlgorithmValidator(resultCardNumber);
                 string iinProvider = issuerIdentificationNumberValidator(resultCardNumber);
                 bool isValid = luhnIsValid && iinProvider != "Invalid Card Number" && iinProvider != "Undefined Provider";
+                changeColors(isValid);
                 Console.WriteLine("{0} - {1} - {2}", resultCardNumber, isValid ? "Valid" : "Invalid", iinProvider);
+                Console.Write("");
                 if (isValid) {
+                    Console.ResetColor();
+                    Console.Write("");
                     Console.WriteLine("Created {0} credit card numbers", counter);
+                    Console.WriteLine();
                     break;
                 } 
+                Console.ResetColor();
                 counter++;
             }
             return resultCardNumber;
